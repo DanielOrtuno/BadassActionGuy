@@ -30,4 +30,19 @@ class BADASSACTIONGUY_API AAutomaticShootingWeapon : public AShootingWeapon
 	
 public:
 	AAutomaticShootingWeapon();
+
+	virtual void Tick(float DeltaTime) override;
+
+private:
+	UFUNCTION(BlueprintCallable, Category = Shooting)
+	void OnStartFire();
+
+	UFUNCTION(BlueprintCallable, Category = Shooting)
+	void OnStopFire();
+
+private:
+	FTimerHandle FireHandle;
+
+	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
+	FAutomaticWeaponConfig AutomaticWeaponConfig;
 };

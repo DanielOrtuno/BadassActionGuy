@@ -7,11 +7,12 @@
 #include "WeaponBase.generated.h"
 
 class USkeletalMeshComponent;
+class ACharacter;
 
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
 {
-	Projectile,
+	Basic,
 	SmallMelee,
 	LargeMelee,
 	HandGun,
@@ -36,9 +37,34 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/** The character has requested to equip the weapon */
+	void OnEquip(ACharacter* NewOwner);
+
+	/** The character has requested to unequip the weapon */
+	void OnUnequip();
+
+	/** The character has requested to fire the weapon */
+	virtual void OnStartFire() = 0;
+
+	/** The character has requested to stop firing the weapon */
+	virtual void OnStopFire() = 0;
+
+	/** The character has requested to throw the weapon */
+	virtual void OnThrow();
+
+	/** Returns the current owner. Can be null */
+	ACharacter* GetCurrentOwner() const;
+
 private:
+	/** Attaches the weapon to the owner character */
+	void AttachToCurrentOwner();
+
+	/** Detaches the weapon from the character */
+	void DetachFromCurrentOwner();
+
+protected:
 	/** The mesh of the weapon */
-	UPROPERTY(EditDefaultsOnly, Category = Mesh)
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* WeaponMesh;
 
 private:
@@ -46,4 +72,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = WeaponType)
 	EWeaponType WeaponType;
 
+	/** The current weapon holder */
+	ACharacter* CurrentOwner;
+
+	/** The name of the socket / bone in the character that will be used to attach the weapon */
+	FName AttachPointName;
 };

@@ -39,7 +39,18 @@ class BADASSACTIONGUY_API AShootingWeapon : public AWeaponBase
 public:
 	AShootingWeapon();
 
+	void Fire();
+
 private:
 	/** Structure holding weapon configuration */
+	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
 	FWeaponConfig WeaponConfig;
+
+	/** The muzzle position for projectile instancing */
+	UPROPERTY(EditDefaultsOnly, Category = Muzzle)
+	FName Muzzle;
+
+	/** The projectile that will be shot from the muzzle */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<AActor> Projectile;
 };
