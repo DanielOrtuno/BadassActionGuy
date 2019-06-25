@@ -43,14 +43,14 @@ public:
 	/** The character has requested to unequip the weapon */
 	void OnUnequip();
 
-	/** The character has requested to fire the weapon */
-	virtual void OnStartFire() = 0;
+	/** The character has requested to fire the weapon. Will only display a 'Missing' message if not overriden */
+	virtual void OnStartFire();
 
-	/** The character has requested to stop firing the weapon */
-	virtual void OnStopFire() = 0;
+	/** The character has requested to stop firing the weapon. Will only display a 'Missing' message if not overriden */
+	virtual void OnStopFire();
 
 	/** The character has requested to throw the weapon */
-	virtual void OnThrow();
+	virtual void OnThrow(float ThrowForce);
 
 	/** Returns the current owner. Can be null */
 	ACharacter* GetCurrentOwner() const;
@@ -69,7 +69,7 @@ protected:
 
 private:
 	/** The type of the weapon */
-	UPROPERTY(EditDefaultsOnly, Category = WeaponType)
+	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
 	EWeaponType WeaponType;
 
 	/** The current weapon holder */
@@ -77,4 +77,8 @@ private:
 
 	/** The name of the socket / bone in the character that will be used to attach the weapon */
 	FName AttachPointName;
+
+	/** The base damage that will be dealt if hit with this weapon when thrown */
+	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
+	float ThrownDamage;
 };

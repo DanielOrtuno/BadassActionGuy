@@ -36,6 +36,7 @@ void AWeaponBase::OnEquip(ACharacter * NewOwner)
 	{
 		CurrentOwner = NewOwner;
 		AttachToCurrentOwner();
+		WeaponMesh->SetHiddenInGame(false);
 	}
 }
 
@@ -44,13 +45,33 @@ void AWeaponBase::OnUnequip()
 	if (CurrentOwner)
 	{
 		DetachFromCurrentOwner();
-		CurrentOwner = false;
+		WeaponMesh->SetHiddenInGame(true);
+		CurrentOwner = nullptr;
 	}
 }
 
-void AWeaponBase::OnThrow()
+void AWeaponBase::OnStartFire()
 {
-	// TODO: Add throwing functionality
+	UE_LOG(LogTemp, Warning, TEXT("Attempting to fire a base weapon / weapon without an overriden OnStartFire() method"))
+}
+
+void AWeaponBase::OnStopFire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attempting to fire a base weapon / weapon without an overriden OnStartFire() method"))
+}
+
+void AWeaponBase::OnThrow(float ThrowForce)
+{
+	if (CurrentOwner)
+	{
+		const ACharacter* ThrowingOwner = CurrentOwner;
+		DetachFromCurrentOwner();
+
+		const FVector Impulse = FRotationMatrix(ThrowingOwner->GetControlRotation()).GetScaledAxis(EAxis::X);
+		WeaponMesh->AddImpulse(Impulse);
+
+		UE_LOG(LogTemp, Warning, TEXT("Requested to throw the weapon"))
+	}
 }
 
 ACharacter* AWeaponBase::GetCurrentOwner() const
@@ -65,7 +86,6 @@ void AWeaponBase::AttachToCurrentOwner()
 		USkeletalMeshComponent* CurrentOwnerMesh = CurrentOwner->GetMesh();
 
 		WeaponMesh->AttachToComponent(CurrentOwnerMesh, FAttachmentTransformRules::KeepRelativeTransform, AttachPointName);
-		WeaponMesh->SetHiddenInGame(false);
 	}
 }
 
