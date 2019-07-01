@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+	// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BaseCharacter.h"
 #include "Engine.h"
@@ -13,6 +13,9 @@ ABaseCharacter::ABaseCharacter()
 	SlowModifier = 0.05f;
 	MaxSlowMoTime = 3.0f;
 	SlowMoRechargeDelay = 2.0f;
+	JumpForce = 2000.0f;
+
+	CanPlayerJump = true;
 }
 
 // Called when the game starts or when spawned
@@ -31,27 +34,27 @@ void ABaseCharacter::Tick(float DeltaTime)
 
 	if(GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(0, 0.1F, FColor::Emerald, *FString::SanitizeFloat(SlowMoTime));
+		GEngine->AddOnScreenDebugMessage(0, 0.1F, FColor::Emerald, *FString::FromInt(OnWall));
 	}
 
-	//If time is slowed
+	/** If time is slowed */
 	if(GetWorldSettings()->TimeDilation != 1.0f)
 	{
 		if(SlowMoTime > 0.0f)
 		{
 			SlowMoTime -= GetWorld()->GetDeltaSeconds() / SlowModifier;
 			SlowMoRechargeTimer = SlowMoRechargeDelay;
-			//Instead of checking again, wait for next tick to disable SlowMo if less or equal to zero
+			/** Instead of checking again, wait for next tick to disable SlowMo if less or equal to zero */
 		}
 		else
 		{
-			//Player ran out of SlowMo juice. What a pity...
+			/** Player ran out of SlowMo juice. What a pity... */
 			StopSlowMo();
 		}
 	}
 	else 
 	{
-		//Check if we have to wait to refill the SlowMo time
+		/** Check if we have to wait to refill the SlowMo time */
 		if(SlowMoRechargeTimer > 0.0f)
 		{
 			SlowMoRechargeTimer -= GetWorld()->GetDeltaSeconds();
@@ -70,14 +73,15 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	//Binding movement functions
+	/** Binding movement functions */
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &ABaseCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &ABaseCharacter::AddControllerPitchInput);
 
-	//Binding actions
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ABaseCharacter::Jump);
+	/** Binding actions */
+	//PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ABaseCharacter::Jump);
+	//PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &ABaseCharacter::StopJumping);
 	PlayerInputComponent->BindAction("SlowMo", EInputEvent::IE_Pressed, this, &ABaseCharacter::StartSlowMo);
 	PlayerInputComponent->BindAction("SlowMo", EInputEvent::IE_Released, this, &ABaseCharacter::StopSlowMo);
 	PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &ABaseCharacter::StartSprint);
@@ -87,14 +91,20 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ABaseCharacter::MoveForward(float Value)
 {
-	FVector Direction = FRotationMatrix(GetActorRotation()).GetScaledAxis(EAxis::X);
-	AddMovementInput(Direction, Value);
+	//if(!OnWall)
+	{
+		FVector Direction = FRotationMatrix(GetActorRotation()).GetScaledAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
+	}
 }
 
 void ABaseCharacter::MoveRight(float Value)
 {
-	FVector Direction = FRotationMatrix(GetActorRotation()).GetScaledAxis(EAxis::Y);
-	AddMovementInput(Direction, Value);
+	//if(!OnWall)
+	{
+		FVector Direction = FRotationMatrix(GetActorRotation()).GetScaledAxis(EAxis::Y);
+		AddMovementInput(Direction, Value);
+	}
 }
 
 void ABaseCharacter::Fire()
