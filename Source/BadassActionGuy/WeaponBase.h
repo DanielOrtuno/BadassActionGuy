@@ -7,7 +7,7 @@
 #include "WeaponBase.generated.h"
 
 class USkeletalMeshComponent;
-class ACharacter;
+class AJuanTestCharacter;
 
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
@@ -38,7 +38,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/** The character has requested to equip the weapon */
-	void OnEquip(ACharacter* NewOwner);
+	void OnEquip(AJuanTestCharacter* NewOwner);
 
 	/** The character has requested to unequip the weapon */
 	void OnUnequip();
@@ -50,10 +50,10 @@ public:
 	virtual void OnStopFire();
 
 	/** The character has requested to throw the weapon */
-	virtual void OnThrow(float ThrowForce);
+	virtual void OnThrow();
 
 	/** Returns the current owner. Can be null */
-	ACharacter* GetCurrentOwner() const;
+	AJuanTestCharacter* GetCurrentOwner() const;
 
 private:
 	/** Attaches the weapon to the owner character */
@@ -68,17 +68,18 @@ protected:
 	USkeletalMeshComponent* WeaponMesh;
 
 private:
+	/** The speed at which weapons are thrown. Changing this value affects all weapons*/
+	static float ThrowDistance;
+
 	/** The type of the weapon */
 	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
 	EWeaponType WeaponType;
 
 	/** The current weapon holder */
-	ACharacter* CurrentOwner;
-
-	/** The name of the socket / bone in the character that will be used to attach the weapon */
-	FName AttachPointName;
+	AJuanTestCharacter* CurrentOwner;
 
 	/** The base damage that will be dealt if hit with this weapon when thrown */
 	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
 	float ThrownDamage;
+
 };
