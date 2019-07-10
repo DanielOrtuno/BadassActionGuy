@@ -5,8 +5,11 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
 #include "JuanTestCharacter.h"
+#include "Camera/PlayerCameraManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "Public/TimerManager.h"
 
-float AWeaponBase::ThrowDistance = 1000.0f;
+float AWeaponBase::ThrowDistance = 4000.f;
 
 // Sets default values
 AWeaponBase::AWeaponBase()
@@ -31,6 +34,7 @@ void AWeaponBase::BeginPlay()
 void AWeaponBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 void AWeaponBase::OnEquip(AJuanTestCharacter * NewOwner)
@@ -68,10 +72,19 @@ void AWeaponBase::OnThrow()
 	if (CurrentOwner)
 	{
 		const ACharacter* ThrowingOwner = CurrentOwner;
+		
+		const APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+		const FVector StartThrowLocation = CameraManager->GetCameraLocation() + FRotationMatrix(CameraManager->GetCameraRotation()).GetScaledAxis(EAxis::X) * 100.0f;
+
+		// This is done before detaching the weapon from the character since the DetachFromCurrentOwner activates physics simulation
+		// and will mess with the SetActorLocationMethod
+		// TODO: This will be edited if I figure out a better way to do this
+		SetActorLocation(StartThrowLocation);
+		SetActorRelativeRotation(ThrowRotation);
+
 		DetachFromCurrentOwner();
 
-		const FVector Target = FRotationMatrix(ThrowingOwner->GetControlRotation()).GetScaledAxis(EAxis::X) * ThrowDistance;
-		const FVector Impulse = ThrowingOwner->GetActorLocation() + Target - GetActorLocation();
+		const FVector Impulse = FRotationMatrix(ThrowingOwner->GetControlRotation()).GetScaledAxis(EAxis::X) * ThrowDistance;
 		WeaponMesh->AddImpulse(Impulse, NAME_None, true);
 
 		UE_LOG(LogTemp, Warning, TEXT("Requested to throw the weapon"))

@@ -82,4 +82,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
 	float ThrownDamage;
 
+	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
+	FRotator ThrowRotation;
 };
