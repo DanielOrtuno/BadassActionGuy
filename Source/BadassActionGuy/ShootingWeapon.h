@@ -23,11 +23,16 @@ struct FWeaponConfig
 	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
 	int InitialClips;
 
+	/** Time in seconds between two consecutive shots */
+	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
+	float TimeBetweenShots;
+
 	FWeaponConfig()
 	{
 		MaxAmmo = 100;
 		AmmoPerClip = 25;
 		InitialClips = 2;
+		TimeBetweenShots = 0.2f;
 	}
 };
 
@@ -39,7 +44,13 @@ class BADASSACTIONGUY_API AShootingWeapon : public AWeaponBase
 public:
 	AShootingWeapon();
 
+	virtual void OnStartFire() override;
+
+	/** Shoots a single bullet from the gun, if possible */
 	void Fire();
+
+private:
+	void SetTriggerReady();
 
 private:
 	/** Structure holding weapon configuration */
@@ -53,4 +64,18 @@ private:
 	/** The projectile that will be shot from the muzzle */
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<AActor> Projectile;
+
+	/** The current number of clips available for the weapon */
+	UPROPERTY(VisibleInstanceOnly, Category = Ammo)
+	int AvailableClips;
+
+	/** Ammo count inside the current clip */
+	UPROPERTY(VisibleInstanceOnly, Category = Ammo)
+	int AmmoInClip;
+
+	/** Timer to handle the delay between shots */
+	FTimerHandle ShotDelay;
+
+	/** True if there is no pending delay from shots */
+	bool bTriggerReady;
 };

@@ -79,10 +79,10 @@ void AWeaponBase::OnThrow()
 		// This is done before detaching the weapon from the character since the DetachFromCurrentOwner activates physics simulation
 		// and will mess with the SetActorLocationMethod
 		// TODO: This will be edited if I figure out a better way to do this
-		SetActorLocation(StartThrowLocation);
 		SetActorRelativeRotation(ThrowRotation);
 
 		DetachFromCurrentOwner();
+		SetActorLocation(StartThrowLocation, false, nullptr, ETeleportType::TeleportPhysics);
 
 		const FVector Impulse = FRotationMatrix(ThrowingOwner->GetControlRotation()).GetScaledAxis(EAxis::X) * ThrowDistance;
 		WeaponMesh->AddImpulse(Impulse, NAME_None, true);

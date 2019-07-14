@@ -45,6 +45,9 @@ void AJuanTestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("Turn", this, &AJuanTestCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AJuanTestCharacter::AddControllerPitchInput);
 
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AJuanTestCharacter::StartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AJuanTestCharacter::StopFire);
+
 	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AJuanTestCharacter::ThrowWeapon);
 }
 
@@ -85,6 +88,7 @@ void AJuanTestCharacter::StartFire()
 {
 	if (CurrentWeapon)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Player has initiated fire"))
 		CurrentWeapon->OnStartFire();
 	}
 }

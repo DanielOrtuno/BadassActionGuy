@@ -14,4 +14,11 @@ class BADASSACTIONGUY_API AMeleeWeapon : public AWeaponBase
 {
 	GENERATED_BODY()
 	
+public:
+	AMeleeWeapon();
+
+protected:
+	//virtual void OnStartFire() override;
+
+	//virtual void OnStopFire() override;
 };
