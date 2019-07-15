@@ -38,6 +38,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/** The character has requested to equip the weapon */
+	UFUNCTION(BlueprintCallable, Category = Default)
 	void OnEquip(AJuanTestCharacter* NewOwner);
 
 	/** The character has requested to unequip the weapon */

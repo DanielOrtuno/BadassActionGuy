@@ -4,6 +4,8 @@
 #include "JuanTestCharacter.h"
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
+#include "Camera/PlayerCameraManager.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AJuanTestCharacter::AJuanTestCharacter()
@@ -31,7 +33,6 @@ void AJuanTestCharacter::PostInitializeComponents()
 void AJuanTestCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -68,27 +69,41 @@ FName AJuanTestCharacter::GetAttachPointName() const
 	return AttachPointName;
 }
 
+bool AJuanTestCharacter::HasWeapon() const
+{
+	return CurrentWeapon != nullptr;
+}
+
 void AJuanTestCharacter::EquipDefaultWeapon()
 {
 	if (DefaultWeapon)
 	{
-		CurrentWeapon = GetWorld()->SpawnActor<AWeaponBase>(DefaultWeapon);
+		EquipWeapon(GetWorld()->SpawnActor<AWeaponBase>(DefaultWeapon));
+	}
+}
+
+void AJuanTestCharacter::EquipWeapon(AWeaponBase * NewWeapon)
+{
+	if (!CurrentWeapon)
+	{
+		CurrentWeapon = NewWeapon;
 		CurrentWeapon->OnEquip(this);
 	}
 }
 
 void AJuanTestCharacter::ThrowWeapon()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Player has requested to throw the weapon"))
-
-	CurrentWeapon->OnThrow();
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->OnThrow();
+		CurrentWeapon = nullptr;
+	}
 }
 
 void AJuanTestCharacter::StartFire()
 {
 	if (CurrentWeapon)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player has initiated fire"))
 		CurrentWeapon->OnStartFire();
 	}
 }

@@ -34,8 +34,17 @@ public:
 	void MoveRight(float Value);
 
 	FName GetAttachPointName() const;
+
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool HasWeapon() const;
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	void EquipWeapon(AWeaponBase* NewWeapon);
+
 private:
 	void EquipDefaultWeapon();
+
 
 	void ThrowWeapon();
 
@@ -44,7 +53,6 @@ private:
 	void StopFire();
 
 private:
-
 	AWeaponBase* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = DefaultSettings)
