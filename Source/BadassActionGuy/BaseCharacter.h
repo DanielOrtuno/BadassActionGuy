@@ -17,6 +17,9 @@ class BADASSACTIONGUY_API ABaseCharacter : public ACharacter
 
 private:
 	UPROPERTY(EditAnywhere)
+	float JumpForce;
+
+	UPROPERTY(EditAnywhere)
 	float SpeedModifier;
 
 	UPROPERTY(EditAnywhere)
@@ -34,6 +37,13 @@ private:
 	UPROPERTY()
 	float SlowMoRechargeTimer;
 
+public:
+	UPROPERTY(BlueprintReadWrite)
+	bool CanPlayerJump;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool OnWall;
+	
 /********************
 * Member Functions
 ********************/
