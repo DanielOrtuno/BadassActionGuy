@@ -27,12 +27,17 @@ struct FWeaponConfig
 	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
 	float TimeBetweenShots;
 
+	/** Max distance a bullet can travel */
+	UPROPERTY(EditDefaultsOnly, Category = WeaponConfig)
+	float Range;
+
 	FWeaponConfig()
 	{
 		MaxAmmo = 100;
 		AmmoPerClip = 25;
 		InitialClips = 2;
 		TimeBetweenShots = 0.2f;
+		Range = 10000.f;
 	}
 };
 

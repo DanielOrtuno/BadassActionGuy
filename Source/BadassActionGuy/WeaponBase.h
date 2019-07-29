@@ -68,7 +68,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USkeletalMeshComponent* WeaponMesh;
 
-private:
+protected:
 	/** The speed at which weapons are thrown. Changing this value affects all weapons*/
 	static float ThrowDistance;
 
