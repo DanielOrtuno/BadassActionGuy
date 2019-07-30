@@ -21,6 +21,9 @@ AWeaponBase::AWeaponBase()
 	WeaponMesh->bEditableWhenInherited = true;
 	RootComponent = WeaponMesh;
 
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+	WeaponMesh->SetSimulatePhysics(true);
+
 	WeaponType = EWeaponType::Basic;
 }
 
