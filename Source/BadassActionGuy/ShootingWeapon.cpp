@@ -19,11 +19,27 @@ AShootingWeapon::AShootingWeapon()
 
 void AShootingWeapon::OnStartFire()
 {
-	if (bTriggerReady)
+	if (!WeaponConfig.bIsAutomatic)
 	{
-		Fire();
-		bTriggerReady = false;
-		GetWorldTimerManager().SetTimer(ShotDelay, this, &AShootingWeapon::SetTriggerReady, WeaponConfig.TimeBetweenShots, false);
+		if (bTriggerReady)
+		{
+			Fire();
+			bTriggerReady = false;
+			GetWorldTimerManager().SetTimer(ShotDelay, this, &AShootingWeapon::SetTriggerReady, WeaponConfig.TimeBetweenShots, false);
+		}
+	}
+
+	else
+	{
+		GetWorldTimerManager().SetTimer(ShotDelay, this, &AShootingWeapon::Fire, WeaponConfig.TimeBetweenShots, true, 0.0f);
+	}
+}
+
+void AShootingWeapon::OnStopFire()
+{
+	if (WeaponConfig.bIsAutomatic)
+	{
+		GetWorldTimerManager().ClearTimer(ShotDelay);
 	}
 }
 
